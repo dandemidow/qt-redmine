@@ -7,21 +7,20 @@
 //
 // Promtehaero VoIP Project
 
-#ifndef USER
-#define USER
+#ifndef PROJECT
+#define PROJECT
 
 #include <QString>
 #include "types.h"
 
-
-struct User {
+struct Project {
   unsigned int id;
-  QString login;
-  QString firstname;
-  QString lastname;
-  QString mail;
-  opt<QString> groups;
+  QString name;
+  QString identifier;
+  QString description;
+  QString created_on;
+  QString updated_on;
 };
 
-#endif // USER
+#endif // PROJECT
 

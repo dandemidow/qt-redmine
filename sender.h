@@ -11,41 +11,36 @@
 #define SENDER_H
 
 #include <QObject>
-#include "user.h"
+#include <QtXml/QDomDocument>
+
 #include "network.h"
 
 class Sender: public QObject {
   Q_OBJECT
-public:
-
   Network &_net;
-
   QByteArray _ua;
+protected:
   QUrl _url;
+  QByteArray _buffer;
 
-  Sender(const QUrl &url, Network &net);
+  void sendRequest(const QByteArray& requestData);
+public:
+  explicit Sender(const QUrl &url, Network &net);
+  Sender(const Sender &s);
   virtual ~Sender();
-
-  void sendRequest(QUrl url, const QByteArray& requestData);
-
-  virtual void process(const QByteArray &ans) = 0;
 
 public slots:
   void onReadyRead();
+  void onFinished();
 public:
-  void start() {
-    sendRequest(_url, QByteArray());
+  template <class Cmd>
+  void start(const Cmd &cmd) {
+    cmd.setPath(_url);
+    sendRequest(QByteArray());
   }
-};
 
-class UsersSender: public Sender {
-  Q_OBJECT
-  QList<User> ans2User(QByteArray ans);
-public:
-  UsersSender(const QUrl &url, Network &net) : Sender(QUrl(url.toString()+"/users.xml"), net){}
-  void process(const QByteArray &ans);
 signals:
-  void readyUsers(QList<User>);
+  void result(QDomDocument);
 };
 
 #endif // SENDER_H

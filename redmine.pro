@@ -14,9 +14,16 @@ SOURCES += \
 
 HEADERS += \
     sender.h \
-    user.h \
     network.h \
     authenticator.h \
     redmine.h \
-    redmine_global.h
+    redmine_global.h \
+    parameter.h \
+    types.h \
+    converter.h \
+    pathing.h \
+    including.h
 
+include(user.pri)
+#include(project.pri)
+#include(issue.pri)

@@ -12,17 +12,18 @@ class QNetworkAccessManager;
 #include <QFuture>
 #include <QThread>
 
-#include "sender.h"
+#include "user.h"
+#include "project.h"
+#include "usercmd.h"
+#include "projectssender.h"
+#include "issuessender.h"
 
 class REDMINEQTSHARED_EXPORT RedmineClient : public QObject {
 
 	Q_OBJECT
 
   Network net;
-  Sender *_send;
-  QByteArray buffer;
   QUrl _url;
-  QByteArray _ua;
 
 public:
 
@@ -30,14 +31,11 @@ public:
   RedmineClient(const QUrl &url, const QString &login, const QString &password, QObject* parent = NULL);
 	virtual ~RedmineClient();
 
-  void setUserAgent(QByteArray ua);
-  void getUsers();
-
-signals:
-  void readyUsers(QList<User>);
-
-public slots:
-  void onReadyUsers(QList<User>);
+  Sender get()
+  {
+    Sender snd(_url, net);
+    return snd;
+  }
 };
 
 #endif  // REDMINE_H_
