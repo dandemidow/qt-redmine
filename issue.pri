@@ -1,10 +1,10 @@
 
-SOURCES += issuessender.cpp \
+SOURCES += \
     $$PWD/issueparameters.cpp
 
 HEADERS += \
     issue.h \
-    issuessender.h \
     $$PWD/issueparameters.h \
-    $$PWD/issueconverter.h
+    $$PWD/issueconverter.h \
+    $$PWD/issuecmd.h
 

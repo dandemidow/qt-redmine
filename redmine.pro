@@ -26,5 +26,5 @@ HEADERS += \
     typing.h
 
 include(user.pri)
-#include(project.pri)
-#include(issue.pri)
+include(project.pri)
+include(issue.pri)

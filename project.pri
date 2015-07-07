@@ -1,10 +1,10 @@
 
-SOURCES += projectssender.cpp \
+SOURCES += \
     $$PWD/projectparameters.cpp
 
 HEADERS += \
     project.h \
-    projectssender.h \
     $$PWD/projectconverter.h \
-    $$PWD/projectparameters.h
+    $$PWD/projectparameters.h \
+    $$PWD/projectcmd.h
 

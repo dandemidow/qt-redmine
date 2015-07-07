@@ -17,7 +17,19 @@ struct Issue {
   unsigned int id;
   IdType project;
   IdType tracker;
+  IdType status;
+  IdType priority;
+  IdType author;
   QString subject;
+  QString description;
+  QString start_date;
+  QString due_date;
+  unsigned int done_ratio;
+  QString estimated_hours;
+  QString created_on;
+  QString updated_on;
+  QString closed_on;
+
 };
 
 #endif // ISSUE

@@ -64,6 +64,12 @@ struct conv <QString> {
 #define GET_ELEMENT(part) \
   st.part = conv<Q_TYPEOF(st.part)>::get(node.firstChildElement(#part));
 
+#define GET_IDTYPE_ELEMENT(idel) \
+  START_PARSE_ELEMENT(idel) \
+    GET_ATTRIBUTE(id) \
+    GET_ATTRIBUTE(name) \
+  STOP_PARSE_ELEMENT
+
 template <typename T>
 struct Convert {};
 

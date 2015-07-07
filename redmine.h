@@ -12,11 +12,7 @@ class QNetworkAccessManager;
 #include <QFuture>
 #include <QThread>
 
-#include "user.h"
-#include "project.h"
-#include "usercmd.h"
-#include "projectssender.h"
-#include "issuessender.h"
+#include "sender.h"
 
 class REDMINEQTSHARED_EXPORT RedmineClient : public QObject {
 

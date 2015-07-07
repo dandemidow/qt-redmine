@@ -7,8 +7,11 @@
 //
 // Promtehaero VoIP Project
 
-#include "projectparameters.h"
+#ifndef PROJECTSSENDER_H
+#define PROJECTSSENDER_H
 
-namespace prj {
+#include "typing.h"
 
-}  // namespace prj
+STANDARD_TYPES_REQUESTS(ProjectCmd, "projects")
+
+#endif // PROJECTSSENDER_H

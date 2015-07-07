@@ -11,16 +11,5 @@
 
 namespace iss {
 
-  Only::Only(unsigned int id) : _id(id) {
-  }
-
-  void Only::setPath(QUrl &url) const {
-    url.setPath("/issues/"+QString::number(_id)+".xml");
-  }
-
-
-  void All::setPath(QUrl &url) const {
-    url.setPath("/issues.xml");
-  }
 
 }  // namespace iss

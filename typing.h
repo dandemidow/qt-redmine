@@ -16,8 +16,9 @@
 
 #include "network.h"
 #include "including.h"
+#include "pathing.h"
 
-class Post {
+class Content {
   QDomDocument _content;
 public:
   QByteArray getContent() const {
@@ -28,7 +29,7 @@ public:
   }
 };
 
-class Get {
+class NoContent {
 public:
   QByteArray getContent() const {
     return QByteArray();
@@ -40,28 +41,54 @@ class Typing {
 };
 template<class Self>
 class Typing<Network::GET, Self> :
-    public Get,
-    public Includeble<Self>{
+    public Path,
+    public NoContent,
+    public Includeble<Self> {
 public:
   static const Network::RequestType type = Network::GET;
+  explicit Typing(const QString &path): Path(path) {}
+  explicit Typing(const QString &path, unsigned int id): Path(path, id) {}
+  void setPath(QUrl &url) const {
+    Path::setPath(url);
+    Includeble<Self>::setQuery(url);
+  }
 };
+
 template<class Self>
-class Typing<Network::POST, Self> : public Post {
+class Typing<Network::POST, Self> :
+    public Path,
+    public Content {
 public:
   static const Network::RequestType type = Network::POST;
+  explicit Typing(const QString &path): Path(path) {}
 };
 
 template <class Self>
-class Typing<Network::PUT, Self> : public Post {
+class Typing<Network::PUT, Self> :
+    public Path,
+    public Content {
 public:
   static const Network::RequestType type = Network::PUT;
+  explicit Typing(const QString &path, unsigned int id): Path(path, id) {}
 };
 
 template <class Self>
-class Typing<Network::DELETE, Self> : public Get {
+class Typing<Network::DELETE, Self> :
+    public Path,
+    public NoContent {
 public:
   static const Network::RequestType type = Network::DELETE;
+  explicit Typing(const QString &path, unsigned int id): Path(path, id) {}
 };
+
+#define STANDARD_TYPES_REQUESTS(cl, path) \
+  template <Network::RequestType type> \
+  class cl : public Typing<type, cl<type> > { \
+  public: \
+    explicit cl(): Typing<type, cl<type> >(path) {} \
+    template <typename Arg> \
+    explicit cl(Arg arg): Typing<type, cl<type> >(path, arg) {} \
+  };
 
 #endif // TYPING
 

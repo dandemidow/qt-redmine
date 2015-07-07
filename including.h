@@ -12,6 +12,7 @@
 
 #include <QString>
 #include <QUrl>
+#include "parameter.h"
 
 template <class Self>
 class Includeble {

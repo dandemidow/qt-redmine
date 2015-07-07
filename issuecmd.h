@@ -7,8 +7,11 @@
 //
 // Promtehaero VoIP Project
 
-#include "usercmd.h"
+#ifndef ISSUESSENDER_H
+#define ISSUESSENDER_H
 
-#include <QtXml>
-#include <QDomDocument>
+#include "typing.h"
 
+STANDARD_TYPES_REQUESTS(IssueCmd, "issues")
+
+#endif // USSUESSENDER_H

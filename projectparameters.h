@@ -14,18 +14,6 @@
 
 namespace prj {
 
-class Only : public Parameter {
-  unsigned int _id;
-public:
-  explicit Only(unsigned int id);
-  void setPath(QUrl &url) const;
-};
-
-class All : public Parameter {
-public:
-  void setPath(QUrl &url) const;
-};
-
 }  // namespace prj
 
 #endif // PROJECTPARAMETERS_H

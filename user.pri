@@ -1,7 +1,6 @@
 
 SOURCES += \
-    $$PWD/userparameters.cpp \
-    $$PWD/usercmd.cpp
+    $$PWD/userparameters.cpp
 
 HEADERS += \
     user.h \

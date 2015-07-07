@@ -55,8 +55,8 @@ void Sender::onReadyRead()
       _buffer[_reply].append(_reply->readAll());
     } else {
       qDebug()<<"reply "<<_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-      qDebug()<<_reply->readAll();
       qDebug()<<_reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute);
+      qDebug()<<_reply->readAll();
     }
   }
 }
@@ -67,6 +67,6 @@ void Sender::onFinished()
   QDomDocument doc;
   qDebug()<<"ans "<<_buffer[_reply];//.size();
   bool ok = doc.setContent(_buffer[_reply]);
-  if ( ok ) qWarning()<<"set content error";
+  if ( !ok ) qWarning()<<"set content error";
   result(doc);
 }
