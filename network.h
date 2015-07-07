@@ -22,11 +22,20 @@ class Network
   Authenticator auth;
 
 public:
+  enum RequestType {
+    GET,
+    POST,
+    PUT,
+    DELETE
+  };
+
   Network(const QByteArray &key);
   Network(const QString &login, const QString &password);
   ~Network();
 
-  QNetworkReply* sendGet(QNetworkRequest &request);
+  QNetworkReply *send(QNetworkRequest &request,
+                      RequestType t,
+                      const QByteArray &data = QByteArray());
 };
 
 #endif // NETWORK_H_

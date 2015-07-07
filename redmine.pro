@@ -22,7 +22,8 @@ HEADERS += \
     types.h \
     converter.h \
     pathing.h \
-    including.h
+    including.h \
+    typing.h
 
 include(user.pri)
 #include(project.pri)

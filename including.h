@@ -11,6 +11,7 @@
 #define INCLUDING
 
 #include <QString>
+#include <QUrl>
 
 template <class Self>
 class Includeble {
@@ -26,6 +27,9 @@ public:
   }
   QString query() const {
     return _include;
+  }
+  void setQuery(QUrl &url) const {
+    url.setQuery(_include);
   }
 };
 

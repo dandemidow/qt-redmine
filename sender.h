@@ -10,6 +10,7 @@
 #ifndef SENDER_H
 #define SENDER_H
 
+#include <QMap>
 #include <QObject>
 #include <QtXml/QDomDocument>
 
@@ -21,9 +22,11 @@ class Sender: public QObject {
   QByteArray _ua;
 protected:
   QUrl _url;
-  QByteArray _buffer;
+  QMap<QNetworkReply*, QByteArray> _buffer;
 
-  void sendRequest(const QByteArray& requestData);
+  void sendRequest(Network::RequestType t,
+                   const QUrl &url,
+                   const QByteArray& requestData);
 public:
   explicit Sender(const QUrl &url, Network &net);
   Sender(const Sender &s);
@@ -35,8 +38,9 @@ public slots:
 public:
   template <class Cmd>
   void start(const Cmd &cmd) {
-    cmd.setPath(_url);
-    sendRequest(QByteArray());
+    QUrl url = _url;
+    cmd.setPath(url);
+    sendRequest(cmd.type, url, cmd.getContent());
   }
 
 signals:

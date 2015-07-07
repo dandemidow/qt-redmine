@@ -22,10 +22,32 @@ Network::~Network()
 
 }
 
-QNetworkReply* Network::sendGet(QNetworkRequest &request)
+QNetworkReply* Network::send(QNetworkRequest &request,
+                             RequestType t,
+                             const QByteArray &data)
 {
   auth.addAuthentication(request);
-  QNetworkReply* _reply = nam.get(request);
+  QNetworkReply* _reply = 0;
+  switch(t) {
+    case GET:
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "text/xml");
+      _reply = nam.get(request);
+      break;
+    case POST:
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "application/xml");
+      _reply = nam.post(request, data);
+      qDebug()<<"post: "<<data;
+      break;
+    case PUT:
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "application/xml");
+      _reply = nam.put(request, data);
+      qDebug()<<"put: "<<data;
+      break;
+    case DELETE:
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "text/xml");
+      _reply = nam.deleteResource(request);
+      break;
+  }
   return _reply;
 }
 

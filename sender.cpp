@@ -25,38 +25,48 @@ Sender::Sender(const Sender &s):
 
 Sender::~Sender() { qDebug()<<"sender dtor()"; }
 
-void Sender::sendRequest(const QByteArray &requestData) {
+void Sender::sendRequest(Network::RequestType t,
+                         const QUrl &url,
+                         const QByteArray &requestData) {
 
+  _buffer.clear();
   QByteArray dataSizeAsByteArray = QByteArray::number(requestData.size());
 
-  qDebug()<<_url;
-  QNetworkRequest request(_url);
-  request.setRawHeader("User-Agent", _ua);
-  request.setRawHeader("X-Custom-User-Agent", _ua);
-  request.setRawHeader("Content-Type", "text/xml");
+  qDebug()<<url;
+  QNetworkRequest request(url);
+//  request.setRawHeader("User-Agent", _ua);
+//  request.setRawHeader("X-Custom-User-Agent", _ua);
   request.setRawHeader("Content-Length", dataSizeAsByteArray);
 
-  QNetworkReply* _reply = _net.sendGet(request);
-  connect(_reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-
-  connect(_reply, SIGNAL(finished()), this, SLOT(onFinished()));
+  QNetworkReply* _reply = _net.send(request, t, requestData);
+  if ( _reply ) {
+    _buffer[_reply].clear();
+    connect(_reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+    connect(_reply, SIGNAL(finished()), this, SLOT(onFinished()));
+  }
 }
 
 void Sender::onReadyRead()
 {
   QNetworkReply *_reply = (QNetworkReply*)sender();
   if ( _reply ) {
-    if ( _reply->attribute(QNetworkRequest::HttpStatusCodeAttribute) == 200 ) {
-      _buffer.append(_reply->readAll());
-    } else qDebug()<<"reply "<<_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    u_int32_t code = _reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toUInt();
+    if ( code >= 200 && code < 300 ) {
+      _buffer[_reply].append(_reply->readAll());
+    } else {
+      qDebug()<<"reply "<<_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+      qDebug()<<_reply->readAll();
+      qDebug()<<_reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute);
+    }
   }
 }
 
 void Sender::onFinished()
 {
+  QNetworkReply *_reply = (QNetworkReply*)sender();
   QDomDocument doc;
-  qDebug()<<"ans "<<_buffer;//.size();
-  bool ok = doc.setContent(_buffer);
-  Q_ASSERT(ok);
+  qDebug()<<"ans "<<_buffer[_reply];//.size();
+  bool ok = doc.setContent(_buffer[_reply]);
+  if ( ok ) qWarning()<<"set content error";
   result(doc);
 }
