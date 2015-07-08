@@ -81,6 +81,12 @@ public:
   explicit Typing(const QString &path, unsigned int id): Path(path, id) {}
 };
 
+#define SIMPLE_GET_REQUEST(cl, path) \
+  class cl: public Typing<Network::GET, cl> { \
+    public: \
+    cl(): Typing(path){} \
+  };
+
 #define STANDARD_TYPES_REQUESTS(cl, path) \
   template <Network::RequestType type> \
   class cl : public Typing<type, cl<type> > { \

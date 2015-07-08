@@ -13,6 +13,24 @@
 #include <QString>
 #include "types.h"
 
+struct IssuePriority {
+  unsigned int id;
+  QString name;
+  bool is_default;
+};
+
+struct IssueStatus {
+  unsigned int id;
+  QString name;
+  bool is_default;
+  bool is_closed;
+};
+
+struct Tracker {
+  unsigned int id;
+  QString name;
+};
+
 struct Issue {
   unsigned int id;
   IdType project;

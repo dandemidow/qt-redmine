@@ -39,6 +39,20 @@ struct Convert<Issue> {
   }
 };
 
+template <>
+struct Convert<IssuePriority> {
+  static Answer<IssuePriority> exec(const QDomDocument &doc) {
+    Answer<IssuePriority> _ans;
+    cnv::getInfo(doc, "issue_priorities", _ans);
+    START_PARSE_DOC(doc, issue_priority, _ans)
+      GET_ELEMENT(id)
+      GET_ELEMENT(name)
+      GET_ELEMENT(is_default)
+    STOP_PARSE_DOC
+    return _ans;
+  }
+};
+
 
 #endif // ISSUECONVERTER
 

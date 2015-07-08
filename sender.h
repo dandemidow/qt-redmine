@@ -44,6 +44,7 @@ public:
   }
 
 signals:
+  void finish();
   void result(QDomDocument);
 };
 

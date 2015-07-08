@@ -19,4 +19,15 @@ RedmineClient::RedmineClient(const QUrl &url, const QString &login, const QStrin
 }
 
 RedmineClient::~RedmineClient() {
+  qDeleteAll(_reg);
+}
+
+Sender RedmineClient::get()
+{
+  Sender snd(_url, net);
+  return snd;
+}
+
+void RedmineClient::onFinish() {
+  delete sender();
 }

@@ -16,16 +16,20 @@
 
 template <class Self>
 class Includeble {
-  bool _included;
   QString _include;
 public:
-  explicit Includeble() : _included(false) {}
+  explicit Includeble() {}
 
   Self &operator <<(const Include &i) {
     this->_include = i.getInclude();
-    this->_included = true;
     return *(static_cast<Self*>(this));
   }
+
+  Self &operator <<(const Filter &f) {
+    this->_include = f.getFilter();
+    return *(static_cast<Self*>(this));
+  }
+
   QString query() const {
     return _include;
   }

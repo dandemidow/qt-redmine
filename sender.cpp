@@ -67,6 +67,9 @@ void Sender::onFinished()
   QDomDocument doc;
   qDebug()<<"ans "<<_buffer[_reply];//.size();
   bool ok = doc.setContent(_buffer[_reply]);
-  if ( !ok ) qWarning()<<"set content error";
-  result(doc);
+  if ( !ok )
+    qWarning()<<"set content error";
+  else
+    emit result(doc);
+  emit finish();
 }

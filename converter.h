@@ -10,6 +10,7 @@
 #ifndef REDMINE_CONVERTER_
 #define REDMINE_CONVERTER_
 
+#include <QVariant>
 #include <QtXml/QDomDocument>
 
 template<typename R>
@@ -35,6 +36,16 @@ struct conv <QString> {
   }
   static QString get(const QString &attr) {
     return attr;
+  }
+};
+
+template<>
+struct conv <bool> {
+  static bool get(const QDomElement& el) {
+    return QVariant(el.text()).toBool();
+  }
+  static bool get(const QString &attr) {
+    return QVariant(attr).toBool();
   }
 };
 
