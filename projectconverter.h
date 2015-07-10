@@ -1,11 +1,6 @@
-// Copyright 2015, Promtehaero.
-// All rights reserved.
-//
-// Software license
-//
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
 // Author: dandemidow@gmail.com (Danila Demidow)
-//
-// Promtehaero VoIP Project
 
 #ifndef PROJECTCONVERTER
 #define PROJECTCONVERTER
@@ -17,7 +12,7 @@ template <>
 struct Convert<Project> {
   static Answer<Project> exec(const QDomDocument &doc) {
     Answer<Project> _ans;
-    cnv::getInfo(doc, "projects", _ans);
+    cnv::getInfo(doc, QString::fromLatin1("projects"), _ans);
     START_PARSE_DOC(doc, project, _ans)
         GET_ELEMENT(id);
         GET_ELEMENT(name);

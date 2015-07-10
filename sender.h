@@ -1,11 +1,6 @@
-// Copyright 2015, Promtehaero.
-// All rights reserved.
-//
-// Software license
-//
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
 // Author: dandemidow@gmail.com (Danila Demidow)
-//
-// Promtehaero VoIP Project
 
 #ifndef SENDER_H
 #define SENDER_H
@@ -40,6 +35,8 @@ public:
   void start(const Cmd &cmd) {
     QUrl url = _url;
     cmd.setPath(url);
+//    url.setPath("/contacts.xml");
+//    url.setQuery("include=custom_fields");
     sendRequest(cmd.type, url, cmd.getContent());
   }
 

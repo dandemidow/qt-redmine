@@ -1,3 +1,7 @@
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
+// Author: dandemidow@gmail.com (Danila Demidow)
+
 #include "redmine.h"
 
 #include <QDebug>
@@ -18,11 +22,18 @@ RedmineClient::RedmineClient(const QUrl &url, const QString &login, const QStrin
   _url(url) {
 }
 
+RedmineClient::RedmineClient(const QUrl &url, const char *login, const char *password, QObject *parent) :
+  QObject(parent),
+  net(QString::fromLatin1(login), QString::fromLatin1(password)),
+  _url(url)
+{
+}
+
 RedmineClient::~RedmineClient() {
   qDeleteAll(_reg);
 }
 
-Sender RedmineClient::get()
+Sender RedmineClient::getSender()
 {
   Sender snd(_url, net);
   return snd;

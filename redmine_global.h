@@ -1,3 +1,7 @@
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
+// Author: dandemidow@gmail.com (Danila Demidow)
+
 #ifndef REDMINE_GLOBAL_H_
 #define REDMINE_GLOBAL_H_
 

@@ -1,11 +1,6 @@
-// Copyright 2015, Promtehaero.
-// All rights reserved.
-//
-// Software license
-//
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
 // Author: dandemidow@gmail.com (Danila Demidow)
-//
-// Promtehaero VoIP Project
 
 #ifndef TYPING
 #define TYPING
@@ -84,16 +79,16 @@ public:
 #define SIMPLE_GET_REQUEST(cl, path) \
   class cl: public Typing<Network::GET, cl> { \
     public: \
-    cl(): Typing(path){} \
+    cl(): Typing(QString::fromLatin1(path)){} \
   };
 
 #define STANDARD_TYPES_REQUESTS(cl, path) \
   template <Network::RequestType type> \
   class cl : public Typing<type, cl<type> > { \
   public: \
-    explicit cl(): Typing<type, cl<type> >(path) {} \
+    explicit cl(): Typing<type, cl<type> >(QString::fromLatin1(path)) {} \
     template <typename Arg> \
-    explicit cl(Arg arg): Typing<type, cl<type> >(path, arg) {} \
+    explicit cl(Arg arg): Typing<type, cl<type> >(QString::fromLatin1(path), arg) {} \
   };
 
 #endif // TYPING

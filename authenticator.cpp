@@ -1,12 +1,6 @@
-// Copyright 2015, Promtehaero.
-// All rights reserved.
-//
-// Software license
-//
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
 // Author: dandemidow@gmail.com (Danila Demidow)
-//
-// Promtehaero VoIP Project
-
 
 #include "authenticator.h"
 

@@ -1,11 +1,6 @@
-// Copyright 2015, Promtehaero.
-// All rights reserved.
-//
-// Software license
-//
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
 // Author: dandemidow@gmail.com (Danila Demidow)
-//
-// Promtehaero VoIP Project
 
 #ifndef PATHING
 #define PATHING
@@ -16,12 +11,12 @@
 class Format {
   QString _format;
 public:
-  explicit Format() : _format("xml") {}
+  explicit Format() : _format(QString::fromLatin1("xml")) {}
   void setFormat(const QString &format){
     _format = format;
   }
   void addFormat(QString &path) const {
-    path.append(".");
+    path.append(QString::fromLatin1("."));
     path.append(_format);
   }
 };
@@ -31,14 +26,14 @@ class Path :
   QString _path;
 protected:
   static QString addId(const QString path, unsigned int id) {
-    return path+"/"+QString::number(id);
+    return path+QString::fromLatin1("/")+QString::number(id);
   }
 
 public:
   explicit Path(const QString &path) : _path(path) {}
   explicit Path(const QString &path, unsigned int id) : _path(addId(path, id)) {}
   QString path() const {
-    QString p("/");
+    QString p(QString::fromLatin1("/"));
     p.append(_path);
     this->addFormat(p);
     return p;

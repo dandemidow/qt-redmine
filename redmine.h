@@ -1,3 +1,7 @@
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
+// Author: dandemidow@gmail.com (Danila Demidow)
+
 #ifndef REDMINE_H_
 #define REDMINE_H_
 
@@ -51,6 +55,7 @@ public:
 
   RedmineClient(const QUrl &url, QString apiKey, QObject* parent = NULL);
   RedmineClient(const QUrl &url, const QString &login, const QString &password, QObject* parent = NULL);
+  RedmineClient(const QUrl &url, const char *login, const char *password, QObject* parent = NULL);
 	virtual ~RedmineClient();
 
   template <class T>
@@ -68,8 +73,13 @@ public:
   bool run(const T &cmd) {
     C *info = findReg<T>();
     if (!info) return false;
+    return run(cmd, info->_obj, info->_meth);
+  }
+
+  template <class T>
+  bool run(const T &cmd, QObject *obj, const char *meth) {
     Sender *send = new Sender(_url, net);
-    QObject::connect(send, SIGNAL(result(QDomDocument)), info->_obj, info->_meth);
+    QObject::connect(send, SIGNAL(result(QDomDocument)), obj, meth);
     QObject::connect(send, SIGNAL(finish()), this, SLOT(onFinish()));
     send->start(cmd);
     return true;

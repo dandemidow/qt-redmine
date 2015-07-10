@@ -1,11 +1,6 @@
-// Copyright 2015, Promtehaero.
-// All rights reserved.
-//
-// Software license
-//
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
 // Author: dandemidow@gmail.com (Danila Demidow)
-//
-// Promtehaero VoIP Project
 
 #ifndef REDMINE_CONVERTER_
 #define REDMINE_CONVERTER_
@@ -50,7 +45,7 @@ struct conv <bool> {
 };
 
 #define START_PARSE_DOC(doc, name, ans) \
-  QDomNodeList node_list = doc.elementsByTagName(#name); \
+  QDomNodeList node_list = doc.elementsByTagName(QString::fromLatin1(#name)); \
   for (int i = 0; i<node_list.size(); ++i) { \
   typedef Q_TYPEOF(ans) answer_type; \
   typename answer_type::type st; \
@@ -63,17 +58,17 @@ struct conv <bool> {
 
 #define START_PARSE_ELEMENT(f) \
   { \
-  QDomElement last = node.firstChildElement(#f); \
+  QDomElement last = node.firstChildElement(QString::fromLatin1(#f)); \
   Q_TYPEOF(st.f) &element = st.f;
 
 #define STOP_PARSE_ELEMENT \
   }
 
 #define GET_ATTRIBUTE(part) \
-  element.part = conv<Q_TYPEOF(element.part)>::get(last.attribute(#part));
+  element.part = conv<Q_TYPEOF(element.part)>::get(last.attribute(QString::fromLatin1(#part)));
 
 #define GET_ELEMENT(part) \
-  st.part = conv<Q_TYPEOF(st.part)>::get(node.firstChildElement(#part));
+  st.part = conv<Q_TYPEOF(st.part)>::get(node.firstChildElement(QString::fromLatin1(#part)));
 
 #define GET_IDTYPE_ELEMENT(idel) \
   START_PARSE_ELEMENT(idel) \
@@ -89,10 +84,10 @@ namespace cnv {
   void getInfo(const QDomDocument &doc, const QString &type, Ans &ans) {
     QDomElement _types = doc.firstChildElement(type);
     if ( !_types.isNull() ) {
-      ans.info->total_count = _types.attribute("total_count").toUInt(); \
-      ans.info->offset = _types.attribute("offset").toUInt(); \
-      ans.info->limit = _types.attribute("limit").toUInt(); \
-      ans.info->type = _types.attribute("type");
+      ans.info->total_count = _types.attribute(QString::fromLatin1("total_count")).toUInt(); \
+      ans.info->offset = _types.attribute(QString::fromLatin1("offset")).toUInt(); \
+      ans.info->limit = _types.attribute(QString::fromLatin1("limit")).toUInt(); \
+      ans.info->type = _types.attribute(QString::fromLatin1("type"));
     }
   }
 }  // namespace cnv

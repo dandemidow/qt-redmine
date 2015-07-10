@@ -1,11 +1,6 @@
-// Copyright 2015, Promtehaero.
-// All rights reserved.
-//
-// Software license
-//
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
 // Author: dandemidow@gmail.com (Danila Demidow)
-//
-// Promtehaero VoIP Project
 
 #ifndef ISSUEPARAMETERS_H
 #define ISSUEPARAMETERS_H
@@ -43,12 +38,12 @@ namespace iss {
     Status() : Filter("status_id", "*") {}
     Status(Type t) : Filter("status_id", fromType(t)) {}
   private:
-    QString fromType(Type t) {
+    const char *fromType(Type t) {
       switch(t) {
         case open: return "open";
         case closed: return "closed";
       }
-      return QString::null;
+      return 0;
     }
   };
 

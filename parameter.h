@@ -1,11 +1,6 @@
-// Copyright 2015, Promtehaero.
-// All rights reserved.
-//
-// Software license
-//
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
 // Author: dandemidow@gmail.com (Danila Demidow)
-//
-// Promtehaero VoIP Project
 
 #ifndef PARAMETER
 #define PARAMETER
@@ -29,13 +24,16 @@ protected:
   }
 
 public:
-  explicit Filter(const QString &key) : _key(key) {}
-  explicit Filter(const QString &key, const QString &value) :
-    _key(key),
+  explicit Filter(const char *key) : _key(QString::fromLatin1(key)) {}
+  explicit Filter(const char *key, const QString &value) :
+    _key(QString::fromLatin1(key)),
     _value(value) {}
+  explicit Filter(const char *key, const char *value) :
+    _key(QString::fromLatin1(key)),
+    _value(QString::fromLatin1(value)) {}
   QString getFilter() const {
-    QString arg ( _key + "=" + _value );
-    if ( _next ) arg.append("&"+_next->getFilter());
+    QString arg ( _key + QString::fromLatin1("=") + _value );
+    if ( _next ) arg.append(QString::fromLatin1("&")+_next->getFilter());
     return arg;
   }
 
@@ -53,7 +51,7 @@ class Include {
 protected:
   QString collect() const {
     QString add;
-    if ( _next ) add = ","+_next->collect();
+    if ( _next ) add = QString::fromLatin1(",")+_next->collect();
     return _value+add;
   }
   template <typename T>
@@ -68,7 +66,7 @@ public:
   virtual ~Include(){}
 
   QString getInclude() const {
-    QString add("include=");
+    QString add = QString::fromLatin1("include=");
     add.append(collect());
     return add;
   }

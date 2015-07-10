@@ -1,11 +1,6 @@
-// Copyright 2015, Promtehaero.
-// All rights reserved.
-//
-// Software license
-//
+// qt-redmine client
+// Copyright (C) 2015, Danila Demidow
 // Author: dandemidow@gmail.com (Danila Demidow)
-//
-// Promtehaero VoIP Project
 
 #ifndef ISSUECONVERTER
 #define ISSUECONVERTER
@@ -17,7 +12,7 @@ template <>
 struct Convert<Issue> {
   static Answer<Issue> exec(const QDomDocument &doc) {
     Answer<Issue> _ans;
-    cnv::getInfo(doc, "issues", _ans);
+    cnv::getInfo(doc, QString::fromLatin1("issues"), _ans);
     START_PARSE_DOC(doc, issue, _ans)
       GET_ELEMENT(id)
       GET_IDTYPE_ELEMENT(project)
@@ -43,13 +38,28 @@ template <>
 struct Convert<IssuePriority> {
   static Answer<IssuePriority> exec(const QDomDocument &doc) {
     Answer<IssuePriority> _ans;
-    cnv::getInfo(doc, "issue_priorities", _ans);
+    cnv::getInfo(doc, QString::fromLatin1("issue_priorities"), _ans);
     START_PARSE_DOC(doc, issue_priority, _ans)
       GET_ELEMENT(id)
       GET_ELEMENT(name)
       GET_ELEMENT(is_default)
     STOP_PARSE_DOC
     return _ans;
+  }
+};
+
+template <>
+struct Convert<IssueStatus> {
+  static Answer<IssueStatus> exec(const QDomDocument &doc) {
+    Answer<IssueStatus> _ans;
+    cnv::getInfo(doc, QString::fromLatin1("issue_statuses"), _ans);
+    START_PARSE_DOC(doc, issue_status, _ans)
+        GET_ELEMENT(id)
+        GET_ELEMENT(name)
+        GET_ELEMENT(is_default)
+        GET_ELEMENT(is_closed)
+        STOP_PARSE_DOC
+        return _ans;
   }
 };
 
