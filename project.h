@@ -17,5 +17,12 @@ struct Project {
   QString updated_on;
 };
 
+struct ProjectMember {
+  unsigned int id;
+  IdType project;
+  IdType user;
+  // roles
+};
+
 #endif // PROJECT
 

@@ -9,4 +9,11 @@
 
 STANDARD_TYPES_REQUESTS(ProjectCmd, "projects")
 
+class ProjectMembers :
+  public Typing<Network::GET, ProjectMembers> {
+  public:
+    ProjectMembers(unsigned int id) : Typing("projects/"+QString::number(id)+"/memberships") {}
+    ProjectMembers(const char* name) : Typing("projects/"+QString::fromLatin1(name)+"/memberships") {}
+};
+
 #endif // PROJECTSSENDER_H

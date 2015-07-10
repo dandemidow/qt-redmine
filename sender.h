@@ -35,8 +35,8 @@ public:
   void start(const Cmd &cmd) {
     QUrl url = _url;
     cmd.setPath(url);
-//    url.setPath("/contacts.xml");
-//    url.setQuery("include=custom_fields");
+//    url.setPath("/projects/28.xml");
+//    url.setQuery("include=journals");
     sendRequest(cmd.type, url, cmd.getContent());
   }
 

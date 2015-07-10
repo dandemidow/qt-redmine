@@ -47,6 +47,11 @@ namespace iss {
     }
   };
 
+  class Journals : public Include {
+  public:
+    explicit Journals(): Include("journals"){}
+  };
+
 
 }  // namespace iss
 

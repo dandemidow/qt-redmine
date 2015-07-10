@@ -29,6 +29,15 @@ struct Convert<Issue> {
       GET_ELEMENT(created_on)
       GET_ELEMENT(updated_on)
       GET_ELEMENT(closed_on)
+        QDomNodeList journ_list = doc.elementsByTagName(QString::fromLatin1("journal"));
+        for ( int j = 0; j<journ_list.size(); ++j ) {
+          Journal jour;
+          QDomNode jnode = journ_list.item(j);
+          QDomElement jo = jnode.firstChildElement(QString::fromLatin1("notes"));
+          jour.notes = jo.text();
+          st.journals.append(jour);
+        }
+
     STOP_PARSE_DOC
     return _ans;
   }

@@ -62,6 +62,7 @@ protected:
   }
 public:
   explicit Include(const QString &value) : _value(value) {}
+  explicit Include(const char *value) : _value(QString::fromLatin1(value)) {}
   explicit Include(const Include &i) : _value(i._value) ,_next(i._next) {}
   virtual ~Include(){}
 

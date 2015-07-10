@@ -25,5 +25,19 @@ struct Convert<Project> {
   }
 };
 
+template <>
+struct Convert<ProjectMember> {
+  static Answer<ProjectMember> exec(const QDomDocument &doc) {
+    Answer<ProjectMember> _ans;
+    cnv::getInfo(doc, QString::fromLatin1("memberships"), _ans);
+    START_PARSE_DOC(doc, membership, _ans)
+        GET_ELEMENT(id);
+        GET_IDTYPE_ELEMENT(project)
+        GET_IDTYPE_ELEMENT(user)
+    STOP_PARSE_DOC
+    return _ans;
+  }
+};
+
 #endif // PROJECTCONVERTER
 

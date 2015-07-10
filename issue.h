@@ -26,6 +26,13 @@ struct Tracker {
   QString name;
 };
 
+struct Journal {
+  unsigned int id;
+  IdType user;
+  QString notes;
+  QString created_on;
+};
+
 struct Issue {
   unsigned int id;
   IdType project;
@@ -42,7 +49,7 @@ struct Issue {
   QString created_on;
   QString updated_on;
   QString closed_on;
-
+  QList<Journal> journals;
 };
 
 #endif // ISSUE

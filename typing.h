@@ -43,6 +43,8 @@ public:
   static const Network::RequestType type = Network::GET;
   explicit Typing(const QString &path): Path(path) {}
   explicit Typing(const QString &path, unsigned int id): Path(path, id) {}
+  explicit Typing(const char *path): Path(QString::fromLatin1(path)) {}
+  explicit Typing(const char *path, unsigned int id): Path(QString::fromLatin1(path), id) {}
   void setPath(QUrl &url) const {
     Path::setPath(url);
     Includeble<Self>::setQuery(url);
