@@ -30,17 +30,4 @@ ADOPT_END
 
 ADOPT_ANSWER(User, users, user)
 
-
-
-//  typedef void (hand<User>::*func_type)(User &, QDomElement &);
-
-//  void set(User &ans, QDomElement &) {
-//    doc.toElement();
-//    QDomNode preNode = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
-//    doc.insertBefore(preNode, doc.firstChild());
-//    QDomElement user = doc.createElement("user");
-//    doc.appendChild(user);
-//  }
-//};
-
 #endif // USER

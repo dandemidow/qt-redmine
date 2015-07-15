@@ -60,8 +60,16 @@ ADOPT_STRUCT(Detail)
   PARSE_ELEMENT_SAME(new_value)
 ADOPT_END
 
-struct Journal {
+struct JournalType {
   unsigned int id;
+};
+
+ADOPT_STRUCT_ATTRIBUTE(JournalType)
+  PARSE_ATTRIBUTE_SAME(id)
+ADOPT_STRUCT_ATTRIBUTE_END
+
+struct Journal {
+  JournalType journal;
   IdType user;
   QString notes;
   QString created_on;
@@ -69,7 +77,7 @@ struct Journal {
 };
 
 ADOPT_STRUCT(Journal)
-  PARSE_ELEMENT_SAME(id)
+  PARSE_ELEMENT_SAME(journal)
   PARSE_ELEMENT_SAME(user)
   PARSE_ELEMENT_SAME(notes)
   PARSE_ELEMENT_SAME(created_on)
