@@ -126,5 +126,42 @@ ADOPT_END
 
 ADOPT_ANSWER(Issue, issues, issue)
 
+struct IssuePost {
+  opt<unsigned int> project_id;
+  opt<unsigned int> tracker_id;
+  opt<unsigned int> status_id;
+  opt<unsigned int> priority_id;
+  opt<QString> subject;
+  opt<QString> description;
+  opt<unsigned int> category_id;
+  opt<unsigned int> fixed_version_id;
+  opt<unsigned int> assigned_to_id;
+  opt<unsigned int> parent_issue_id;
+  //custom_fields;
+  //watcher_user_ids;
+  opt<bool> is_private;
+  opt<unsigned int> estimated_hours;
+  // for put
+  opt<QString> notes;
+  opt<bool> private_notes;
+};
+
+ADOPT_STRUCT(IssuePost)
+  PARSE_ELEMENT_SAME(project_id);
+  PARSE_ELEMENT_SAME(tracker_id)
+  PARSE_ELEMENT_SAME(status_id)
+  PARSE_ELEMENT_SAME(priority_id)
+  PARSE_ELEMENT_SAME(subject)
+  PARSE_ELEMENT_SAME(description)
+  PARSE_ELEMENT_SAME(category_id)
+  PARSE_ELEMENT_SAME(fixed_version_id)
+  PARSE_ELEMENT_SAME(assigned_to_id)
+  PARSE_ELEMENT_SAME(is_private)
+  PARSE_ELEMENT_SAME(estimated_hours)
+  PARSE_ELEMENT_SAME(notes)
+  PARSE_ELEMENT_SAME(private_notes)
+ADOPT_END
+ADOPT_ANSWER(IssuePost, issues, issue)
+
 #endif // ISSUE
 

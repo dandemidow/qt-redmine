@@ -62,7 +62,7 @@ struct hand {
       s.name = conv<Q_TYPEOF(s.name)>::get(_element.attribute(QString::fromLatin1(#element))); \
     } \
     void set(st_type &s) { \
-      _element.setAttribute(#element, s.name); \
+      _element.setAttribute(QString::fromLatin1(#element), s.name); \
     } \
     _##name(QDomDocument &_d, const QDomElement &_e) : __base(_d, _e) {} \
   }; \
@@ -112,8 +112,8 @@ struct hand {
     } \
     void set(st_type &s) { \
       QDomElement ch; \
-      if ( _element.tagName() != #element ) { \
-        ch = _document.createElement(#element); \
+      if ( _element.tagName() != QString::fromLatin1(#element) ) { \
+        ch = _document.createElement(QString::fromLatin1(#element)); \
         _element.appendChild(ch); \
       } else ch = _element; \
       hand<Q_TYPEOF(s.name)>(_document, ch).set(s.name); \
@@ -132,7 +132,7 @@ struct hand {
       hand<Q_TYPEOF(s.nodes)>(_document, element, QString::fromLatin1(#node)).get(s.nodes); \
     } \
     void set(st_type &s) { \
-      QDomElement el = _document.createElement(#nodes); \
+      QDomElement el = _document.createElement(QString::fromLatin1(#nodes)); \
       _element.appendChild(el); \
       hand<Q_TYPEOF(s.nodes)>(_document, el, QString::fromLatin1(#node)).set(s.nodes); \
     } \
@@ -199,15 +199,51 @@ public:
   operator bool() const { return exist; }
   operator T() const { return d; }
   T *operator -> () { exist = true; return &d; }
+  T &operator * () { return d; }
 
   template <typename S>
   friend S &operator << (S &s, const opt<T> &o) {
-    s<<o.value;
+    s<<o.d;
     return s;
   }
 };
 
+template<>
+class opt<bool> {
+  bool exist;
+  bool d;
+public:
+  explicit opt():exist(false) {}
+  explicit opt(bool v) : d(v) {}
+  bool &operator = (bool v) { d = v; exist = true; return d; }
+  operator bool() const { return exist; }
+  bool *operator -> () { exist = true; return &d; }
+  bool &operator * () { return d; }
 
+  template <typename S>
+  friend S &operator << (S &s, const opt<bool> &o) {
+    s<<o.d;
+    return s;
+  }
+};
+
+template<>
+template<typename T>
+struct hand<opt<T> > {
+  QDomDocument &doc;
+  QDomElement _element;
+  hand(QDomDocument &_doc, const QDomElement &el) :
+    doc(_doc),
+    _element(el) { }
+  void set(opt<T> &value) {
+    if ( value ) hand<T>(doc, _element).set(*value);
+    else _element.parentNode().removeChild(_element);
+  }
+  void get(opt<T> &value) {
+    if ( !_element.isNull() )
+      hand<T>(doc, _element).get(*value);
+  }
+};
 
 template <typename T>
 struct Answer {
@@ -262,6 +298,8 @@ struct hand<Answer<T> > {
       hand<Q_TYPEOF(l.items)>(doc, list, name).get(l.items);
     }
   }
+
+
 };
 
 
