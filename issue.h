@@ -14,6 +14,12 @@ struct IssuePriority {
   bool is_default;
 };
 
+ADOPT_STRUCT(IssuePriority)
+  PARSE_ELEMENT_SAME(id)
+  PARSE_ELEMENT_SAME(name)
+  PARSE_ELEMENT_SAME(is_default)
+ADOPT_END
+
 struct IssueStatus {
   unsigned int id;
   QString name;
@@ -21,17 +27,50 @@ struct IssueStatus {
   bool is_closed;
 };
 
-struct Tracker {
-  unsigned int id;
+ADOPT_STRUCT(IssueStatus)
+  PARSE_ELEMENT_SAME(id)
+  PARSE_ELEMENT_SAME(name)
+  PARSE_ELEMENT_SAME(is_default)
+  PARSE_ELEMENT_SAME(is_closed)
+ADOPT_END
+
+struct DetailType {
+  QString property;
   QString name;
 };
+
+ADOPT_STRUCT_ATTRIBUTE(DetailType)
+  PARSE_ATTRIBUTE_SAME(property)
+  PARSE_ATTRIBUTE_SAME(name)
+ADOPT_STRUCT_ATTRIBUTE_END
+
+struct Detail {
+  DetailType detail;
+  QVariant old_value;
+  QVariant new_value;
+};
+
+ADOPT_STRUCT(Detail)
+  PARSE_ELEMENT_SAME(detail)
+  PARSE_ELEMENT_SAME(old_value)
+  PARSE_ELEMENT_SAME(new_value)
+ADOPT_END
 
 struct Journal {
   unsigned int id;
   IdType user;
   QString notes;
   QString created_on;
+  QList<Detail> detail;
 };
+
+ADOPT_STRUCT(Journal)
+  PARSE_ELEMENT_SAME(id)
+  PARSE_ELEMENT_SAME(user)
+  PARSE_ELEMENT_SAME(notes)
+  PARSE_ELEMENT_SAME(created_on)
+  PARSE_ELEMENT_SAME(detail)
+ADOPT_END
 
 struct Issue {
   unsigned int id;
@@ -40,6 +79,7 @@ struct Issue {
   IdType status;
   IdType priority;
   IdType author;
+  IdType assigned_to;
   QString subject;
   QString description;
   QString start_date;
@@ -49,8 +89,28 @@ struct Issue {
   QString created_on;
   QString updated_on;
   QString closed_on;
-  QList<Journal> journals;
+  QList<Journal> journal;
 };
+
+ADOPT_STRUCT(Issue)
+  PARSE_ELEMENT_SAME(id)
+  PARSE_ELEMENT_SAME(project)
+  PARSE_ELEMENT_SAME(tracker)
+  PARSE_ELEMENT_SAME(status)
+  PARSE_ELEMENT_SAME(priority)
+  PARSE_ELEMENT_SAME(author)
+  PARSE_ELEMENT_SAME(assigned_to)
+  PARSE_ELEMENT_SAME(subject)
+  PARSE_ELEMENT_SAME(description)
+  PARSE_ELEMENT_SAME(start_date)
+  PARSE_ELEMENT_SAME(due_date)
+  PARSE_ELEMENT_SAME(done_ratio)
+  PARSE_ELEMENT_SAME(estimated_hours)
+  PARSE_ELEMENT_SAME(created_on)
+  PARSE_ELEMENT_SAME(updated_on)
+  PARSE_ELEMENT_SAME(closed_on)
+  PARSE_ELEMENT_SAME(journal)
+ADOPT_END
 
 #endif // ISSUE
 

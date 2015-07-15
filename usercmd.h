@@ -6,6 +6,7 @@
 #define USERSSENDER_H
 
 #include "typing.h"
+#include "parameter.h"
 
 class UserWhoIAm :
     public Typing<Network::GET, UserWhoIAm> {
@@ -14,5 +15,19 @@ public:
 };
 
 STANDARD_TYPES_REQUESTS(UserCmd, "users")
+
+namespace usr {
+
+class Membership : public Include {
+public:
+  explicit Membership() : Include("memberships") {}
+};
+
+class Groups : public Include {
+public:
+  explicit Groups() : Include("groups") {}
+};
+
+}  // namespace usr
 
 #endif // USERSSENDER_H

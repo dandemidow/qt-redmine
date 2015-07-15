@@ -22,6 +22,9 @@ struct conv <unsigned int> {
   static unsigned int get(const QString &attr) {
     return attr.toUInt();
   }
+  static unsigned int get(const QVariant &i) {
+    return i.toUInt();
+  }
 };
 
 template<>
@@ -31,6 +34,12 @@ struct conv <QString> {
   }
   static QString get(const QString &attr) {
     return attr;
+  }
+  static QString get(const unsigned int &i) {
+    return QString::number(i);
+  }
+  static QString get(const QVariant &i) {
+    return i.toString();
   }
 };
 
@@ -44,12 +53,28 @@ struct conv <bool> {
   }
 };
 
+template<>
+struct conv <QVariant> {
+  static QVariant get(const QDomElement& el) {
+    return QVariant(el.text());
+  }
+  static QVariant get(const QString &attr) {
+    return attr;
+  }
+  static QVariant get(const unsigned int &i) {
+    return QVariant(i);
+  }
+  static QVariant get(QVariant &i) {
+    return i;
+  }
+};
+
 #define START_PARSE_DOC(doc, name, ans) \
-  QDomNodeList node_list = doc.elementsByTagName(QString::fromLatin1(#name)); \
-  for (int i = 0; i<node_list.size(); ++i) { \
   typedef Q_TYPEOF(ans) answer_type; \
   typename answer_type::type st; \
   Q_TYPEOF(ans) &__ans = ans; \
+  QDomNodeList node_list = doc.elementsByTagName(QString::fromLatin1(#name)); \
+  for (int i = 0; i<node_list.size(); ++i) { \
   QDomNode node = node_list.item(i);
 
 #define STOP_PARSE_DOC \
@@ -76,13 +101,30 @@ struct conv <bool> {
     GET_ATTRIBUTE(name) \
   STOP_PARSE_ELEMENT
 
+#define START_PARSE_LIST(listname) \
+  { \
+  Q_TYPEOF(st.listname) & __list = st.listname; \
+  typedef Q_TYPEOF(__list.front()) sublist_type; \
+  QString listname_s = QString::fromLatin1(#listname)+"s"; \
+  QDomElement el = node.firstChildElement(listname_s); \
+  QDomNodeList nodes; \
+  if (el.isNull()) nodes = doc.elementsByTagName(QString::fromLatin1(#listname)); \
+  else nodes = el.elementsByTagName(QString::fromLatin1(#listname)); \
+  for ( int j = 0; j<nodes.size(); ++j ) { \
+    sublist_type st; \
+    QDomNode node = nodes.item(j);
+
+#define STOP_PARSE_LIST \
+    __list.append(st); \
+    } \
+  }
+
 template <typename T>
 struct Convert {};
 
 namespace cnv {
   template <class Ans>
-  void getInfo(const QDomDocument &doc, const QString &type, Ans &ans) {
-    QDomElement _types = doc.firstChildElement(type);
+  void getInfo(const QDomElement &_types, Ans &ans) {
     if ( !_types.isNull() ) {
       ans.info->total_count = _types.attribute(QString::fromLatin1("total_count")).toUInt(); \
       ans.info->offset = _types.attribute(QString::fromLatin1("offset")).toUInt(); \

@@ -17,12 +17,27 @@ struct Project {
   QString updated_on;
 };
 
+ADOPT_STRUCT(Project)
+  PARSE_ELEMENT_SAME(id)
+  PARSE_ELEMENT_SAME(name)
+  PARSE_ELEMENT_SAME(identifier)
+  PARSE_ELEMENT_SAME(description)
+  PARSE_ELEMENT_SAME(created_on)
+  PARSE_ELEMENT_SAME(updated_on)
+ADOPT_END
+
 struct ProjectMember {
   unsigned int id;
   IdType project;
   IdType user;
   // roles
 };
+
+ADOPT_STRUCT(ProjectMember)
+  PARSE_ELEMENT_SAME(id)
+  PARSE_ELEMENT_SAME(project)
+  PARSE_ELEMENT_SAME(user)
+ADOPT_END
 
 #endif // PROJECT
 

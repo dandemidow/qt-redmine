@@ -80,5 +80,11 @@ public:
   }
 };
 
+#define SIMPLE_ID_FILTER(name) \
+  class name : public Filter { \
+  public: \
+    name(unsigned int id) : Filter("project_id", QString::number(id)) {} \
+  };
+
 #endif // PARAMETER
 

@@ -12,8 +12,8 @@ STANDARD_TYPES_REQUESTS(ProjectCmd, "projects")
 class ProjectMembers :
   public Typing<Network::GET, ProjectMembers> {
   public:
-    ProjectMembers(unsigned int id) : Typing("projects/"+QString::number(id)+"/memberships") {}
-    ProjectMembers(const char* name) : Typing("projects/"+QString::fromLatin1(name)+"/memberships") {}
+    ProjectMembers(unsigned int id) : Typing(QString::fromLatin1("projects/")+QString::number(id)+QString::fromLatin1("/memberships")) {}
+    ProjectMembers(const char* name) : Typing(QString::fromLatin1("projects/")+QString::fromLatin1(name)+QString::fromLatin1("/memberships")) {}
 };
 
 #endif // PROJECTSSENDER_H
