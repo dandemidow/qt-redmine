@@ -60,7 +60,7 @@ void Sender::onFinished()
 {
   QNetworkReply *_reply = (QNetworkReply*)sender();
   QDomDocument doc;
-  qDebug()<<"ans "<<_buffer[_reply];//.size();
+//  qDebug()<<"ans "<<_buffer[_reply];//.size();
   bool ok = doc.setContent(_buffer[_reply]);
   if ( !ok )
     qWarning()<<"set content error";

@@ -26,6 +26,8 @@ ADOPT_STRUCT(Project)
   PARSE_ELEMENT_SAME(updated_on)
 ADOPT_END
 
+ADOPT_ANSWER(Project, projects, project)
+
 struct ProjectMember {
   unsigned int id;
   IdType project;
@@ -38,6 +40,8 @@ ADOPT_STRUCT(ProjectMember)
   PARSE_ELEMENT_SAME(project)
   PARSE_ELEMENT_SAME(user)
 ADOPT_END
+
+ADOPT_ANSWER(ProjectMember, memberships, membership)
 
 #endif // PROJECT
 

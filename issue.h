@@ -20,6 +20,8 @@ ADOPT_STRUCT(IssuePriority)
   PARSE_ELEMENT_SAME(is_default)
 ADOPT_END
 
+ADOPT_ANSWER(IssuePriority, issue_priorities, issue_priority)
+
 struct IssueStatus {
   unsigned int id;
   QString name;
@@ -33,6 +35,8 @@ ADOPT_STRUCT(IssueStatus)
   PARSE_ELEMENT_SAME(is_default)
   PARSE_ELEMENT_SAME(is_closed)
 ADOPT_END
+
+ADOPT_ANSWER(IssueStatus, issue_statuses, issue_status)
 
 struct DetailType {
   QString property;
@@ -61,7 +65,7 @@ struct Journal {
   IdType user;
   QString notes;
   QString created_on;
-  QList<Detail> detail;
+  QList<Detail> details;
 };
 
 ADOPT_STRUCT(Journal)
@@ -69,7 +73,7 @@ ADOPT_STRUCT(Journal)
   PARSE_ELEMENT_SAME(user)
   PARSE_ELEMENT_SAME(notes)
   PARSE_ELEMENT_SAME(created_on)
-  PARSE_ELEMENT_SAME(detail)
+  PARSE_LIST(details, detail)
 ADOPT_END
 
 struct Issue {
@@ -89,7 +93,7 @@ struct Issue {
   QString created_on;
   QString updated_on;
   QString closed_on;
-  QList<Journal> journal;
+  QList<Journal> journals;
 };
 
 ADOPT_STRUCT(Issue)
@@ -109,8 +113,10 @@ ADOPT_STRUCT(Issue)
   PARSE_ELEMENT_SAME(created_on)
   PARSE_ELEMENT_SAME(updated_on)
   PARSE_ELEMENT_SAME(closed_on)
-  PARSE_ELEMENT_SAME(journal)
+  PARSE_LIST(journals, journal)
 ADOPT_END
+
+ADOPT_ANSWER(Issue, issues, issue)
 
 #endif // ISSUE
 

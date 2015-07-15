@@ -13,17 +13,17 @@ template <typename T>
 struct hand {
   QDomDocument &doc;
   QDomElement elem;
-  hand(QDomDocument &_doc, QDomElement &el) :
+  hand(QDomDocument &_doc, const QDomElement &el) :
     doc(_doc),
     elem(el) {}
-  void set(T &i, const QString &name) {
+  void set(T &i) {
+    QString name;
     QDomElement el = doc.createElement(name);
     el.appendChild(doc.createTextNode(conv<QString>::get(i)));
     elem.appendChild(el);
   }
-  void get(T &i, const QString &name) {
-    QDomElement l = elem.firstChildElement(name);
-    i = conv<T>::get(elem.firstChildElement(name).text());
+  void get(T &i) {
+    i = conv<T>::get(elem.text());
   }
 };
 
@@ -47,16 +47,11 @@ struct hand {
 
 #define ADOPT_STRUCT_ATTRIBUTE_END \
     } \
-    void set(st_type &s, const QString &name) { \
+    void set(st_type &s) { \
       (void)(s);\
-      (void)(name);\
     } \
-    void get(st_type &s, const QString &name) { \
-      QDomElement l = _el; \
-      if ( _el.tagName() != name ) \
-        l = _el.firstChildElement(name); \
+    void get(st_type &s) { \
       foreach (__base *f, __handlers) { \
-        f->_element = l; \
         f->get(s); \
       } \
     } \
@@ -65,12 +60,12 @@ struct hand {
 #define PARSE_ATTRIBUTE(name, element) \
   struct _##name : __base { \
     void get(st_type &s){ \
-      s.name = conv<Q_TYPEOF(s.name)>::get(_element.attribute(#element)); \
+      s.name = conv<Q_TYPEOF(s.name)>::get(_element.attribute(QString::fromLatin1(#element))); \
     } \
     void set(st_type &s) { \
       (void)(s); \
     } \
-    _##name(QDomDocument &_d, QDomElement &_e) : __base(_d, _e) {} \
+    _##name(QDomDocument &_d, const QDomElement &_e) : __base(_d, _e) {} \
   }; \
   __handlers.append(new _##name(_doc, _el)); \
 
@@ -80,36 +75,24 @@ struct hand {
 
 
 
-#define PARSE_ELEMENT(name, element) \
-  struct _##name : __base { \
-    void get(st_type &s){ \
-      hand<Q_TYPEOF(s.name)>(_document, _element).get(s.name, #element); \
-    } \
-    void set(st_type &s) { \
-      hand<Q_TYPEOF(s.name)>(_document, _element).set(s.name, #element); \
-    } \
-    _##name(QDomDocument &_d, QDomElement &_e) : __base(_d, _e) {} \
-  }; \
-  __handlers.append(new _##name(_doc, _el)); \
-
-#define PARSE_ELEMENT_SAME(name) \
-  PARSE_ELEMENT(name, name)
-
 #define ADOPT_STRUCT(st) \
   template <> \
   struct hand<st> { \
     typedef st st_type; \
     struct __base { \
       QDomDocument &_document; \
-      QDomElement &_element; \
+      QDomElement _element; \
       virtual void get(st_type &s) = 0; \
       virtual void set(st_type &s) = 0; \
-      __base(QDomDocument &_d, QDomElement &_e) : _document(_d), _element(_e) {} \
+      __base(QDomDocument &_d, const QDomElement &_e) : _document(_d), _element(_e) {} \
     }; \
     QList<__base *> __handlers; \
-    hand(QDomDocument &_doc, QDomElement &_el) {
+    hand(QDomDocument &_doc, const QDomElement &_el) {
 
 #define ADOPT_END \
+  } \
+  void set(st_type &s) { \
+    (void)(s);\
   } \
   void get(st_type &s) { \
     foreach (__base *f, __handlers) { \
@@ -118,20 +101,50 @@ struct hand {
   } \
 };
 
+#define PARSE_ELEMENT(name, element) \
+  struct _##name : __base { \
+    void get(st_type &s){ \
+      QDomElement element = _element.tagName()!=QString::fromLatin1(#element)?_element.firstChildElement(QString::fromLatin1(#element)):_element; \
+      hand<Q_TYPEOF(s.name)>(_document, element).get(s.name); \
+    } \
+    void set(st_type &s) { \
+      hand<Q_TYPEOF(s.name)>(_document, _element).set(s.name); \
+    } \
+    _##name(QDomDocument &_d, const QDomElement &_e) : __base(_d, _e) {} \
+  }; \
+  __handlers.append(new _##name(_doc, _el)); \
+
+#define PARSE_ELEMENT_SAME(name) \
+  PARSE_ELEMENT(name, name)
+
+#define PARSE_LIST(nodes, node) \
+  struct _##nodes : __base { \
+    void get(st_type &s){ \
+      QDomElement element = _element.firstChildElement(QString::fromLatin1(#nodes)); \
+      hand<Q_TYPEOF(s.nodes)>(_document, element, QString::fromLatin1(#node)).get(s.nodes); \
+    } \
+    void set(st_type &s) { \
+      hand<Q_TYPEOF(s.nodes)>(_document, _element, QString::fromLatin1(#node)).set(s.nodes); \
+    } \
+    _##nodes(QDomDocument &_d, const QDomElement &_e) : __base(_d, _e) {} \
+  }; \
+  __handlers.append(new _##nodes(_doc, _el)); \
+
 template<>
 template<typename T>
 struct hand<QList<T> > {
   QDomDocument &doc;
   QDomElement elem;
-  hand(QDomDocument &_doc, const QDomElement &el) :
+  QString item_name;
+  hand(QDomDocument &_doc, const QDomElement &el, const QString &name) :
     doc(_doc),
-    elem(el) {}
-  void set(QList<T> &i, const QString &name) {
+    elem(el),
+    item_name(name) { }
+  void set(QList<T> &i) {
     (void)(i);
-    (void)(name);
   }
-  void get(QList<T> &l, const QString &name) {
-    QDomNodeList list = elem.elementsByTagName(name);
+  void get(QList<T> &l) {
+    QDomNodeList list = elem.elementsByTagName(item_name);
     for (int i=0; i<list.size(); ++i) {
       QDomNode node = list.item(i);
       T t;
@@ -188,6 +201,16 @@ struct Answer {
   QList<T> items;
 };
 
+template <class T>
+struct AnswerTraits;
+
+#define ADOPT_ANSWER(st, nodes, name) \
+  template <> \
+  struct AnswerTraits <Answer<st> > { \
+    static QString nodes_name() { return QString::fromLatin1(#nodes); } \
+    static QString node_name() { return QString::fromLatin1(#name); } \
+  };
+
 template<>
 template<typename T>
 struct hand<Answer<T> > {
@@ -199,12 +222,12 @@ struct hand<Answer<T> > {
   hand(QDomDocument &_doc) :
     doc(_doc),
     elem(doc.lastChild().toElement()) {}
-  void set(Answer<T> &ans, const QString &name) {
+  void set(Answer<T> &ans) {
     (void)(ans);
-    (void)(name);
   }
-  void get(Answer<T> &l, const QString &names) {
-    QString name = names.left(names.size()-1);
+  void get(Answer<T> &l) {
+    QString name = AnswerTraits<Q_TYPEOF(l)>::node_name();
+    QString names = AnswerTraits<Q_TYPEOF(l)>::nodes_name();
     if ( elem.tagName() == name ) {
       T t;
       hand<T>(doc, elem).get(t);
@@ -212,7 +235,7 @@ struct hand<Answer<T> > {
     } else {
       QDomElement list = elem.tagName()==names?elem:elem.firstChildElement(names);
       cnv::getInfo(list, l);
-      hand<Q_TYPEOF(l.items)>(doc, list).get(l.items, name);
+      hand<Q_TYPEOF(l.items)>(doc, list, name).get(l.items);
     }
   }
 };

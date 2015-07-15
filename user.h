@@ -28,6 +28,8 @@ ADOPT_STRUCT(User)
   PARSE_ELEMENT_SAME(mail)
 ADOPT_END
 
+ADOPT_ANSWER(User, users, user)
+
 
 
 //  typedef void (hand<User>::*func_type)(User &, QDomElement &);
